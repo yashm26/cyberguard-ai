@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --font-display: var(--font-orbitron);
+  --font-mono: var(--font-share-tech-mono);
+  --font-body: var(--font-rajdhani);
+  --font-code: var(--font-jetbrains-mono);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-void: #000000;
+  --color-panel: rgba(0, 0, 0, 0.75);
+  --color-card: rgba(5, 10, 5, 0.85);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-neon-green: #00FF41;
+  --color-neon-cyan: #00D4FF;
+  --color-neon-red: #FF003C;
+  --color-neon-amber: #FFB800;
+
+  --color-text-primary: #FFFFFF;
+  --color-text-muted: rgba(0, 255, 65, 0.45);
+
+  --color-border-glow: rgba(0, 255, 65, 0.2);
+  --color-border-active: rgba(0, 212, 255, 0.5);
+
+  --animate-scanline: scanline 2.5s linear infinite;
+  @keyframes scanline {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
   }
 }
 
+:root {
+  --bg-void: #000000;
+  --bg-panel: rgba(0,0,0,0.75);
+  --bg-card: rgba(5,10,5,0.85);
+
+  --neon-green: #00FF41;
+  --neon-cyan: #00D4FF;
+  --neon-red: #FF003C;
+  --neon-amber: #FFB800;
+
+  --text-primary: #FFFFFF;
+  --text-muted: rgba(0,255,65,0.45);
+
+  --border-glow: rgba(0,255,65,0.2);
+  --border-active: rgba(0,212,255,0.5);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-void);
+  color: var(--neon-green);
+  font-family: var(--font-rajdhani);
 }
