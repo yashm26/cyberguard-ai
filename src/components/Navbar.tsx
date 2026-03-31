@@ -15,8 +15,8 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[rgba(0,0,0,0.85)] border-b border-[rgba(0,255,65,0.15)] backdrop-blur-md">
-      <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full flex justify-center bg-[rgba(0,0,0,0.85)] border-b border-[rgba(0,255,65,0.15)] backdrop-blur-md">
+      <div className="w-full max-w-[1400px] px-4 sm:px-6 h-16 flex items-center justify-between">
         
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-1 group">

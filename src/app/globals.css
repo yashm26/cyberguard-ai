@@ -1,54 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap");
 @import "tailwindcss";
 
-@theme {
-  --font-display: var(--font-orbitron);
-  --font-mono: var(--font-share-tech-mono);
-  --font-body: var(--font-rajdhani);
-  --font-code: var(--font-jetbrains-mono);
-
-  --color-void: #000000;
-  --color-panel: rgba(0, 0, 0, 0.75);
-  --color-card: rgba(5, 10, 5, 0.85);
-
-  --color-neon-green: #00FF41;
-  --color-neon-cyan: #00D4FF;
-  --color-neon-red: #FF003C;
-  --color-neon-amber: #FFB800;
-
-  --color-text-primary: #FFFFFF;
-  --color-text-muted: rgba(0, 255, 65, 0.45);
-
-  --color-border-glow: rgba(0, 255, 65, 0.2);
-  --color-border-active: rgba(0, 212, 255, 0.5);
-
-  --animate-scanline: scanline 2.5s linear infinite;
-  @keyframes scanline {
-    0% { transform: translateY(-100%); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(100%); opacity: 0; }
-  }
-}
-
+/* ─── Design Tokens ──────────────────────────────────────────────────── */
 :root {
-  --bg-void: #000000;
-  --bg-panel: rgba(0,0,0,0.75);
-  --bg-card: rgba(5,10,5,0.85);
+  /* Backgrounds */
+  --bg-void:  #020b08;
+  --bg-panel: rgba(2,11,8,0.85);
+  --bg-card:  rgba(2,11,8,0.80);
 
-  --neon-green: #00FF41;
-  --neon-cyan: #00D4FF;
-  --neon-red: #FF003C;
-  --neon-amber: #FFB800;
+  /* Neon palette */
+  --neon-green:  #00FF41;
+  --neon-cyan:   #00D4FF;
+  --neon-red:    #FF003C;
+  --neon-amber:  #FFB800;
 
-  --text-primary: #FFFFFF;
-  --text-muted: rgba(0,255,65,0.45);
+  /* Text */
+  --text-primary: rgba(0,255,65,0.9);
+  --text-muted:   rgba(0,255,65,0.45);
 
-  --border-glow: rgba(0,255,65,0.2);
-  --border-active: rgba(0,212,255,0.5);
+  /* Borders */
+  --border-default: rgba(0,255,65,0.18);
+  --border-active:  rgba(0,212,255,0.5);
+
+  /* Glows */
+  --glow-green: 0 0 15px rgba(0,255,65,0.4);
+  --glow-cyan:  0 0 15px rgba(0,212,255,0.4);
+  --glow-red:   0 0 15px rgba(255,0,60,0.4);
 }
+
+/* ─── Base Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--bg-void);
-  color: var(--neon-green);
-  font-family: var(--font-rajdhani);
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: "Rajdhani", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* CRT scan-line overlay */
+  position: relative;
+}
+
+/* Global scanline overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,255,65,0.025) 2px,
+    rgba(0,255,65,0.025) 3px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Text selection */
+::selection {
+  background: var(--neon-green);
+  color: #000;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.3); }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+
+/* ─── Typography helpers ─────────────────────────────────────────────── */
+.font-display { font-family: "Orbitron", sans-serif; }
+.font-mono    { font-family: "Share Tech Mono", monospace; }
+.font-body    { font-family: "Rajdhani", sans-serif; }
+.font-code    { font-family: "JetBrains Mono", "Share Tech Mono", monospace; }
+
+/* ─── Cyberpunk card ─────────────────────────────────────────────────── */
+.cg-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--neon-green);
+  padding: 14px 18px;
+}
+.cg-card-cyan  { border-left-color: var(--neon-cyan); }
+.cg-card-red   { border-left-color: var(--neon-red); }
+.cg-card-amber { border-left-color: var(--neon-amber); }
+
+/* ─── Button styles ──────────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--neon-green);
+  color: #000;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  padding: 10px 24px;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: box-shadow 0.2s, filter 0.2s;
+}
+.btn-primary:hover { box-shadow: var(--glow-green); filter: brightness(1.1); }
+
+.btn-secondary {
+  background: transparent;
+  color: rgba(0,255,65,0.7);
+  font-family: "Share Tech Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid rgba(0,255,65,0.4);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.btn-secondary:hover {
+  border-color: var(--neon-green);
+  background: rgba(0,255,65,0.06);
+  box-shadow: var(--glow-green);
+}
+
+/* ─── Glow helpers ───────────────────────────────────────────────────── */
+.glow-green { box-shadow: var(--glow-green); }
+.glow-cyan  { box-shadow: var(--glow-cyan); }
+.glow-red   { box-shadow: var(--glow-red); }
+
+.text-glow-green { text-shadow: 0 0 12px rgba(0,255,65,0.6); }
+.text-glow-cyan  { text-shadow: 0 0 12px rgba(0,212,255,0.6); }
+.text-glow-red   { text-shadow: 0 0 12px rgba(255,0,60,0.6); }
+
+/* ─── ThreatBar ──────────────────────────────────────────────────────── */
+.threat-bar-track {
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.threat-bar-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  transition: width 1.2s ease;
+}
+
+/* ─── Live Ticker marquee ────────────────────────────────────────────── */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track { animation: ticker-scroll 28s linear infinite; }
+.ticker-track:hover { animation-play-state: paused; }
+
+/* ─── Pulse dot ──────────────────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+.pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+
+/* ─── Scanline sweep (for cards / panels) ────────────────────────────── */
+@keyframes scanline-sweep {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(200%); opacity: 0; }
+}
+.scanline-sweep {
+  animation: scanline-sweep 2.5s linear infinite;
+}
+
+/* ─── Blinking cursor ────────────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.blink { animation: blink 1s step-end infinite; }
+
+/* ─── Tailwind theme vars ────────────────────────────────────────────── */
+@theme {
+  --font-display: "Orbitron", sans-serif;
+  --font-mono:    "Share Tech Mono", monospace;
+  --font-body:    "Rajdhani", sans-serif;
+  --font-code:    "JetBrains Mono", monospace;
+
+  --color-void:       #020b08;
+  --color-panel:      rgba(2,11,8,0.85);
+  --color-card:       rgba(2,11,8,0.80);
+  --color-neon-green: #00FF41;
+  --color-neon-cyan:  #00D4FF;
+  --color-neon-red:   #FF003C;
+  --color-neon-amber: #FFB800;
+  --color-text-muted: rgba(0,255,65,0.45);
+  --color-border-glow:  rgba(0,255,65,0.18);
+  --color-border-active: rgba(0,212,255,0.5);
 }

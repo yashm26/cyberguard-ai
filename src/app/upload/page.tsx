@@ -54,6 +54,7 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
+    <div className="w-full min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 pb-20">
     <div className="w-full max-w-4xl mx-auto pt-12 pb-24 px-6">
 
       <div className="mb-12 text-center">
@@ -209,6 +210,7 @@ export default function UploadPage() {
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
     </div>
   );
 }

@@ -30,6 +30,7 @@ const recentTable = [
 
 export default function DashboardPage() {
   return (
+    <div className="w-full min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 pb-20">
     <div className="w-full pt-8 pb-20 px-6">
       
       <div className="mb-10">
@@ -170,6 +171,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
+    </div>
     </div>
   );
 }
