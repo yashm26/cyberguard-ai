@@ -57,11 +57,11 @@ export default function UploadPage() {
     <div className="w-full min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 pb-20">
     <div className="w-full max-w-4xl mx-auto pt-12 pb-24 px-6">
 
-      <div className="mb-12 text-center">
-        <h1 className="font-display font-bold text-3xl mb-4 tracking-wider">
+      <div className="mb-16 text-center mt-4">
+        <h1 className="font-display font-bold text-4xl mb-6 tracking-[0.2em]">
           MALWARE <span className="text-[var(--neon-green)]">SANDBOX</span>
         </h1>
-        <p className="font-body text-[var(--text-muted)] max-w-xl mx-auto">
+        <p className="font-body text-[var(--text-muted)] max-w-3xl mx-auto leading-loose text-lg">
           Upload suspicious files or executables. Our system detonates the payload in an isolated environment to extract YARA matches and behavioral heuristics.
         </p>
       </div>
@@ -112,27 +112,29 @@ export default function UploadPage() {
       <AnimatePresence mode="wait">
         {isScanning && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mt-8 p-6 bg-[rgba(0,0,0,0.9)] border border-[rgba(0,212,255,0.4)]"
+            className="mt-12 p-10 md:p-14 bg-[rgba(0,0,0,0.9)] border border-[rgba(0,212,255,0.4)] shadow-[0_0_40px_rgba(0,212,255,0.08)]"
           >
-            <div className="flex justify-between font-mono text-xs tracking-widest mb-4">
-              <span className="text-[var(--neon-cyan)]">DETONATING: {file?.name}</span>
-              <span className="text-white">{progress}%</span>
+            <div className="flex justify-between font-mono text-sm md:text-base tracking-[0.2em] mb-8">
+              <span className="text-[var(--neon-cyan)] flex items-center gap-3">
+                 <span className="animate-pulse">▶</span> DETONATING: {file?.name}
+              </span>
+              <span className="text-white font-bold">{progress}%</span>
             </div>
 
-            <div className="w-full h-2 bg-[rgba(255,255,255,0.1)] relative overflow-hidden">
+            <div className="w-full h-3 bg-[rgba(255,255,255,0.05)] relative overflow-hidden rounded-sm border border-[rgba(0,212,255,0.1)]">
               <motion.div
-                className="absolute top-0 left-0 h-full bg-[var(--neon-cyan)] shadow-[0_0_10px_rgba(0,212,255,0.5)]"
+                className="absolute top-0 left-0 h-full bg-[var(--neon-cyan)] shadow-[0_0_15px_rgba(0,212,255,0.8)] transition-all duration-200"
                 style={{ width: `${progress}%` }}
               />
             </div>
 
-            <div className="mt-4 font-mono text-[10px] text-[var(--text-muted)] uppercase flex gap-4">
-              {progress > 20 && <span> EXTRACTING_METADATA... OK</span>}
-              {progress > 50 && <span> YARA_SCAN... RUNNING</span>}
-              {progress > 80 && <span> HEURISTIC_MONITORING... ACTIVE</span>}
+            <div className="mt-8 font-mono text-xs md:text-sm tracking-widest text-[var(--text-muted)] uppercase flex flex-col gap-4">
+              {progress > 20 && <span className="flex items-center gap-4 text-[var(--neon-green)]"><span className="w-6 text-center">✓</span> <span className="text-white">EXTRACTING_METADATA...</span> [OK]</span>}
+              {progress > 50 && <span className="flex items-center gap-4 text-[var(--neon-cyan)]"><span className="animate-pulse w-6 text-center text-xl">⟳</span> <span className="text-white">YARA_SCAN...</span> [RUNNING]</span>}
+              {progress > 80 && <span className="flex items-center gap-4 text-[var(--neon-amber)]"><span className="animate-pulse w-6 text-center text-xl">⚠</span> <span className="text-white">HEURISTIC_MONITORING...</span> [ACTIVE]</span>}
             </div>
           </motion.div>
         )}

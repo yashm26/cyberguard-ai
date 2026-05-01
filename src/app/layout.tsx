@@ -64,7 +64,7 @@ export default function RootLayout({
 
         {/* Page content */}
         <main className="flex-1 relative z-10 w-full flex flex-col items-center pb-16">
-          <div className="w-full max-w-[1400px]">
+          <div className="w-full max-w-[1800px] px-2 sm:px-4 xl:px-8">
             {children}
           </div>
         </main>

@@ -33,11 +33,11 @@ export default function DashboardPage() {
     <div className="w-full min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 pb-20">
     <div className="w-full pt-8 pb-20 px-6">
       
-      <div className="mb-10">
-        <h1 className="font-display font-bold text-3xl tracking-wider text-white">
+      <div className="mb-14 mt-4">
+        <h1 className="font-display font-bold text-4xl tracking-[0.2em] text-white">
           GLOBAL <span className="text-[var(--neon-cyan)]">TELEMETRY</span>
         </h1>
-        <p className="font-mono text-xs text-[var(--text-muted)] tracking-widest mt-2">
+        <p className="font-mono text-sm text-[var(--text-muted)] tracking-[0.3em] mt-4 uppercase">
           SYSTEM OVERVIEW / TACTICAL METRICS
         </p>
       </div>

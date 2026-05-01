@@ -70,11 +70,11 @@ export default function ScanPage() {
     <div className="w-full flex-1 pt-12 pb-24 px-6 md:px-12">
       
       {/* Header */}
-      <div className="mb-12 text-center">
-        <h1 className="font-display font-bold text-3xl mb-4 tracking-wider">
+      <div className="mb-16 text-center mt-4">
+        <h1 className="font-display font-bold text-4xl mb-6 tracking-[0.2em]">
           URL <span className="text-[var(--neon-cyan)]">ANALYZER</span>
         </h1>
-        <p className="font-body text-[var(--text-muted)] max-w-xl mx-auto">
+        <p className="font-body text-[var(--text-muted)] max-w-3xl mx-auto leading-loose text-lg">
           Enter a web address below. Our engine will dissect the domain, fetch the payload, and run it through our machine learning classifiers in real-time.
         </p>
       </div>
@@ -93,28 +93,28 @@ export default function ScanPage() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mt-8 border border-[rgba(0,212,255,0.3)] bg-[rgba(0,0,0,0.6)] p-6 relative overflow-hidden"
+                className="mt-12 border border-[rgba(0,212,255,0.3)] bg-[rgba(0,0,0,0.6)] p-8 md:p-12 relative overflow-hidden shadow-[0_0_30px_rgba(0,212,255,0.05)]"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(0,212,255,0.05)] to-transparent animate-scanline pointer-events-none" />
                 
-                <div className="flex items-center justify-between mb-6">
-                  <div className="font-mono text-[var(--neon-cyan)] text-sm tracking-widest flex items-center gap-3">
-                    <span className="animate-spin text-xl">⟳</span>
+                <div className="flex items-center justify-between mb-10 pb-6 border-b border-[rgba(0,212,255,0.1)]">
+                  <div className="font-mono text-[var(--neon-cyan)] text-base md:text-lg tracking-[0.2em] flex items-center gap-4">
+                    <span className="animate-spin text-2xl drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">⟳</span>
                     ANALYSIS IN PROGRESS...
                   </div>
-                  <div className="font-mono text-xs text-[var(--text-muted)]">
+                  <div className="font-mono text-sm tracking-widest text-[var(--text-muted)] bg-[rgba(0,212,255,0.05)] px-4 py-1.5 border border-[rgba(0,212,255,0.2)]">
                     STAGE {scanStage + 1}/{STAGES.length}
                   </div>
                 </div>
 
-                <div className="space-y-4 relative z-10">
+                <div className="space-y-6 md:space-y-8 relative z-10 px-2 md:px-6">
                   {STAGES.map((stage, idx) => {
                     const isActive = idx === scanStage;
                     const isPassed = idx < scanStage;
                     
                     return (
-                      <div key={idx} className={`flex items-center gap-3 font-mono text-xs tracking-wider transition-colors duration-300 ${isActive ? "text-[var(--neon-cyan)]" : isPassed ? "text-[var(--neon-green)]" : "text-[rgba(255,255,255,0.2)]"}`}>
-                        <div className="w-4 flex justify-center">
+                      <div key={idx} className={`flex items-center gap-5 font-mono text-sm md:text-base tracking-[0.15em] transition-all duration-300 ${isActive ? "text-[var(--neon-cyan)] scale-105 origin-left" : isPassed ? "text-[var(--neon-green)]" : "text-[rgba(255,255,255,0.2)]"}`}>
+                        <div className={`w-6 h-6 flex justify-center items-center rounded-sm ${isActive ? 'bg-[rgba(0,212,255,0.1)] border border-[rgba(0,212,255,0.3)]' : isPassed ? 'bg-[rgba(0,255,65,0.1)] border border-[rgba(0,255,65,0.3)]' : 'border border-[rgba(255,255,255,0.1)]'}`}>
                           {isPassed ? "✓" : isActive ? "▶" : "·"}
                         </div>
                         <span className={isActive ? "animate-pulse font-bold" : ""}>

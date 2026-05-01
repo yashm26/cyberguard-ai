@@ -109,12 +109,12 @@ export default function Home() {
             style={{
               fontFamily: "'Orbitron', sans-serif",
               fontWeight: 900,
-              fontSize: "clamp(22px, 3.5vw, 40px)",
-              lineHeight: 1.15,
+              fontSize: "clamp(26px, 4vw, 48px)",
+              lineHeight: 1.25,
               color: "var(--neon-green)",
               textShadow: "0 0 24px rgba(0,255,65,0.25)",
-              marginBottom: 16,
-              letterSpacing: "1px",
+              marginBottom: 24,
+              letterSpacing: "2px",
               width: "100%",
             }}
           >
@@ -129,11 +129,12 @@ export default function Home() {
             ref={bodyRef}
             style={{
               fontFamily: "'Rajdhani', sans-serif",
-              fontSize: "clamp(13px, 1.5vw, 15px)",
-              lineHeight: 1.7,
-              color: "rgba(0,255,65,0.6)",
-              maxWidth: 500,
-              marginBottom: 28,
+              fontSize: "clamp(15px, 1.8vw, 18px)",
+              lineHeight: 1.85,
+              color: "rgba(0,255,65,0.7)",
+              maxWidth: 650,
+              marginBottom: 40,
+              letterSpacing: "0.5px",
             }}
           >
             Real-time phishing detection and malware analysis powered by machine learning. Scan URLs and files instantly to neutralize digital threats before they breach your perimeter.
