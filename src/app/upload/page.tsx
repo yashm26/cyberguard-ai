@@ -5,49 +5,102 @@ import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, FileType, CheckCircle, AlertTriangle, Hash, Cpu, ShieldAlert } from "lucide-react";
 import { ThreatBadge } from "@/components/ThreatBadge";
+import { detectFile, getUserId } from "@/lib/api";
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [userId] = useState(() => getUserId());
 
   const FILE_TYPES = [".exe", ".pdf", ".docx", ".zip", ".js"];
 
-  const simulateScan = (uploadedFile: File) => {
+  const performScan = async (uploadedFile: File) => {
     setIsScanning(true);
     setProgress(0);
     setResult(null);
+    setError(null);
 
-    const interval = setInterval(() => {
+    // Simulate progress while waiting for API
+    const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-
-          setIsScanning(false);
-          // Dummy logic: if file name involves 'hack', 'virus', 'crack', it's malicious
-          const isMalicious = /hack|virus|crack|payload/i.test(uploadedFile.name);
-
-          setResult({
-            hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // dummy sha256
-            verdict: isMalicious ? "INFECTED" : "CLEAN",
-            status: isMalicious ? "threat" : "safe",
-            score: isMalicious ? 95 : 2,
-            yaraMatches: isMalicious ? ["win_susp_registry_mut", "cobalt_strike_beacon"] : ["none"],
-            flags: isMalicious ? ["Obfuscated Code", "High Entropy", "Suspicious Imports"] : ["Standard PDF Header", "Valid Signature"],
-          });
-
-          return 100;
-        }
-        return prev + 5; // 5% ticks
+        if (prev >= 90) return 90;
+        return prev + Math.random() * 30;
       });
-    }, 150);
+    }, 200);
+
+    try {
+      const detectionResult = await detectFile(uploadedFile, userId);
+
+      if (detectionResult.success && detectionResult.data) {
+        const data = detectionResult.data;
+        // Bug fix: file scan results return `is_malware`, not `is_phishing`.
+        // `is_phishing` was always undefined → always falsy → always CLEAN.
+        const isMalicious = data.is_malware ?? data.is_phishing ?? false;
+        const confidence = data.confidence;
+        const details = data.details || {};
+
+        // Build real behavioral flags from backend detail sub-checks
+        const buildFlags = (): string[] => {
+          if (!isMalicious) return ["Standard File Format", "Clean Signature"];
+          const flags: string[] = [];
+          if (details.zip_check?.suspicious_files?.length > 0)
+            flags.push(`Malicious payload inside archive: ${details.zip_check.suspicious_files.join(", ")}`);
+          if (details.ml_check?.is_malware)
+            flags.push(`ML Classifier: malware (conf ${((details.ml_check.confidence ?? 0) * 100).toFixed(0)}%)`);
+          if (details.rule_check?.label)
+            flags.push(`Heuristic: ${details.rule_check.label.replace(/_/g, " ")}`);
+          if (details.vt_check?.is_malware)
+            flags.push(`VirusTotal: flagged (conf ${((details.vt_check.confidence ?? 0) * 100).toFixed(0)}%)`);
+          return flags.length > 0 ? flags : ["Suspicious Behavior Detected"];
+        };
+
+        // Build YARA-style matches from VT stats if available
+        const buildYara = (): string[] => {
+          if (!isMalicious) return ["No Threats Detected"];
+          const vtDetail = details.vt_check?.detail;
+          if (vtDetail && typeof vtDetail === "object" && vtDetail.malicious > 0)
+            return [`${vtDetail.malicious} engine(s) flagged as malicious`];
+          if (details.zip_check?.double_ext_files?.length > 0)
+            return ["Double-extension masquerade detected"];
+          return ["Behavioral Detection Triggered"];
+        };
+
+        setResult({
+          filename: uploadedFile.name,
+          // Bug fix: sha256_hash is at top level, not inside details
+          hash: data.sha256_hash || data.details?.sha256 || "File analyzed",
+          verdict: isMalicious ? "INFECTED" : "CLEAN",
+          status: isMalicious ? "threat" : "safe",
+          score: Math.round(confidence * 100),
+          confidence: confidence,
+          riskLevel: data.risk_level,
+          timestamp: data.timestamp,
+          details: details,
+          yaraMatches: buildYara(),
+          flags: buildFlags(),
+        });
+
+        setProgress(100);
+      } else {
+        setError(detectionResult.error || "File scan failed. Please try again.");
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to scan file. Ensure backend is running.";
+      setError(errorMsg);
+      console.error("File scan error:", err);
+    } finally {
+      clearInterval(progressInterval);
+      setIsScanning(false);
+    }
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setFile(acceptedFiles[0]);
-      simulateScan(acceptedFiles[0]);
+      performScan(acceptedFiles[0]);
     }
   }, []);
 
@@ -110,6 +163,17 @@ export default function UploadPage() {
       </div>
 
       <AnimatePresence mode="wait">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-4 p-4 border border-[var(--neon-red)] bg-[rgba(255,0,60,0.1)] text-[var(--neon-red)] font-mono text-sm"
+          >
+            {error}
+          </motion.div>
+        )}
+
         {isScanning && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -184,7 +248,7 @@ export default function UploadPage() {
 
               <div>
                 <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-widest mb-2 flex items-center gap-2">
-                  <ShieldAlert className="w-3 h-3" /> YARA_MATCHES
+                  <ShieldAlert className="w-3 h-3" /> YOUR_MATCHES
                 </div>
 
                 {result.yaraMatches[0] === 'none' ? (
