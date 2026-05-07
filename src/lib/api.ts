@@ -176,6 +176,60 @@ export const getHistory = async (
   }
 };
 
+// ─── Dashboard Types ───────────────────────────────────────────────────────────
+
+export interface ThreatDistributionItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface ScanVolumeItem {
+  day: string;
+  scans: number;
+  threats: number;
+}
+
+export interface RecentInterception {
+  id: string;
+  target: string;
+  type: "PHISHING" | "MALWARE" | "SUSPICIOUS" | "CLEAN";
+  time: string;
+  status: "BLOCKED" | "QUARANTINED" | "PASSED";
+}
+
+export interface DashboardStats {
+  total_scans: number;
+  threats_blocked: number;
+  threat_distribution: ThreatDistributionItem[];
+  scan_volume: ScanVolumeItem[];
+  recent: RecentInterception[];
+}
+
+export interface DashboardResponse {
+  success: boolean;
+  data?: DashboardStats;
+  error?: string;
+}
+
+/**
+ * Fetch aggregated dashboard stats from MongoDB
+ */
+export const getDashboardStats = async (): Promise<DashboardResponse> => {
+  try {
+    const response = await api.get("/api/dashboard");
+    if (!response.data.success) {
+      throw new Error(response.data.error || "Failed to fetch dashboard stats");
+    }
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error?.response?.data?.error || error?.message || "Failed to fetch dashboard stats";
+    console.error("Dashboard fetch error:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
 /**
  * Health check
  */
