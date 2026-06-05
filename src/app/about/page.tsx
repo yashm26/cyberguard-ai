@@ -96,7 +96,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[rgba(0,212,255,0.3)]">
             <Server className="text-[var(--neon-cyan)] w-5 h-5" />
             <h2 className="font-mono text-xs uppercase tracking-widest text-[#00D4FF]">Technology Stack</h2>
@@ -111,7 +111,7 @@ export default function AboutPage() {
              <span className="px-3 py-1 bg-[rgba(0,255,65,0.1)] border border-[rgba(0,255,65,0.4)] font-mono text-[10px] text-[var(--neon-green)] uppercase">Scikit-Learn / Pandas</span>
              <span className="px-3 py-1 bg-[rgba(0,255,65,0.1)] border border-[rgba(0,255,65,0.4)] font-mono text-[10px] text-[var(--neon-green)] uppercase">YARA Engine</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
     </div>

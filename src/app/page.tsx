@@ -96,7 +96,6 @@ export default function Home() {
                 color: "var(--neon-cyan)",
               }}
             >
-              // AI-POWERED THREAT DETECTION
             </span>
           </motion.div>
 
